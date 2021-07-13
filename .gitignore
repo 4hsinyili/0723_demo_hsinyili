@@ -3,3 +3,4 @@
 *.DS_Store
 *.png
 *.pyc
+QS_Modules/experiment.py
