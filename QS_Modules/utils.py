@@ -77,8 +77,7 @@ class Chrome():
             options.binary_location = os.getcwd() + "/bin/headless-chromium"
             driver = webdriver.Chrome(
                 executable_path=os.getcwd() + "/bin/chromedriver",
-                chrome_options=options,
-                seleniumwire_options={'request_storage_base_dir': '/tmp'})
+                chrome_options=options)
             driver.implicitly_wait(8)
             return driver
 
