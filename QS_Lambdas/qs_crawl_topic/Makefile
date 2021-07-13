@@ -53,4 +53,4 @@ build-lambda-package:		## prepares zip archive for AWS Lambda deploy (-> build/b
 	cp build/build.zip .
 	rm -rf build
 	
-## scp -i appworks_school_hsin_yi.pem ec2-user@54.179.123.235:QSearch_2nd_round/Lambdas/qs_track_topic/build.zip Documents/GitHub/QSearch_2nd_round/Lambdas/qs_track_topic/get_ue_list/
+## scp -i appworks_school_hsin_yi.pem ec2-user@54.179.123.235:QSearch_2nd_Round/QS_Lambdas/qs_crawl_topic/build.zip Documents/GitHub/QSearch_2nd_Round/QS_Lambdas/qs_crawl_topic/
