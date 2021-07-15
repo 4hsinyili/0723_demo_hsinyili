@@ -60,7 +60,12 @@ class DetailCrawler():
                 tracks.append(track)
                 loop_count += 1
             except Exception:
-                print(url, ' failed.')
+                error = {
+                    'url': url,
+                    'topic_id': int(url.split('&t=')[-1]),
+                    'triggered_at': self.triggered_at
+                }
+                QUERY.insert_track_error(error)
         self.driver.quit()
         QUERY.insert_track(tracks)
         return len(urls), loop_count
