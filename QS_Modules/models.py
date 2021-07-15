@@ -64,6 +64,19 @@ class Monitor(Base):
         self.execution_count = execution_count
 
 
+class TrackError(Base):
+    __tablename__ = 'track_error'
+    id = Column(Integer, primary_key=True)
+    triggered_at = Column(DateTime)
+    topic_id = Column(Integer)
+    url = Column(String(255))
+
+    def __init__(self, triggered_at, topic_id, url):
+        self.triggered_at = triggered_at
+        self.topic_id = topic_id
+        self.url = url
+
+
 class Query():
     def __init__(self, host, user, pwd, port, db_name, *args, **kwargs):
         self.host = host
@@ -159,5 +172,12 @@ class Query():
                 'execution_time': execution_time,
                 'execution_count': execution_count,
                 })
+        session.commit()
+        session.close()
+
+    def insert_track_error(self, error):
+        session = self.session
+        record = TrackError(**error)
+        session.add(record)
         session.commit()
         session.close()
