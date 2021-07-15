@@ -1,5 +1,4 @@
 # avoid import error on lambda get_ue_detail
-from lxml import etree
 
 # for timing and not to get caught
 import time
@@ -38,6 +37,7 @@ class ListCrawler():
         self.triggered_at = datetime.utcnow()
 
     def parse(self, url):
+        from lxml import etree
         driver = self.driver
         driver.get(url)
         # driver.get_screenshot_as_file("screenshot.png")

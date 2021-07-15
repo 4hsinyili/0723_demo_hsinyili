@@ -1,6 +1,5 @@
 # avoid import error on lambda get_ue_detail
 from datetime import datetime
-from lxml import etree
 
 # for timing and not to get caught
 import time
@@ -34,6 +33,7 @@ class DetailCrawler():
         self.triggered_at = datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S')
 
     def crawl(self, url):
+        from lxml import etree
         driver = self.driver
         driver.get(url)
         html = driver.page_source
