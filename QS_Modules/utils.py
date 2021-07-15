@@ -76,7 +76,6 @@ class Chrome():
                 '--single-process', '--headless'
             ]
 
-            # chrome_options.add_argument('--disable-gpu')
             for argument in lambda_options:
                 options.add_argument(argument)
 
