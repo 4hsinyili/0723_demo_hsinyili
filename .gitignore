@@ -5,3 +5,5 @@
 *.pyc
 QS_Modules/experiment.py
 *.zip
+QS_Crawlers/chromedriver
+QS_Crawlers/headless-chromium
