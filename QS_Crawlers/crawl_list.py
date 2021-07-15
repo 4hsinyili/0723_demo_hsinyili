@@ -138,7 +138,7 @@ class ListCrawler():
 
 if __name__ == '__main__':
     start = time.time()
-    chrome = Chrome(DRIVER_PATH, True, True, False)
+    chrome = Chrome(DRIVER_PATH, False, False, False)
     list_crawler = ListCrawler(LIST_URL, chrome.driver)
     list_crawler.main()
     stop = time.time()
