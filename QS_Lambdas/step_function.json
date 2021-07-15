@@ -1,0 +1,394 @@
+{
+    "Comment": "This is your state machine",
+    "StartAt": "Crawl Topic",
+    "States": {
+      "Crawl Topic": {
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:ap-northeast-1:713960092195:function:qs_crawl_topic:$LATEST",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Next": "Trackers"
+      },
+      "Trackers": {
+        "Type": "Parallel",
+        "Branches": [
+          {
+            "StartAt": "Track Topic",
+            "States": {
+              "Track Topic": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[0]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (1)",
+            "States": {
+              "Track Topic (1)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[1]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (2)",
+            "States": {
+              "Track Topic (2)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[2]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (3)",
+            "States": {
+              "Track Topic (3)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[3]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (4)",
+            "States": {
+              "Track Topic (4)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[4]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (5)",
+            "States": {
+              "Track Topic (5)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[5]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (6)",
+            "States": {
+              "Track Topic (6)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[6]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (7)",
+            "States": {
+              "Track Topic (7)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[7]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (8)",
+            "States": {
+              "Track Topic (8)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[8]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (9)",
+            "States": {
+              "Track Topic (9)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[9]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (10)",
+            "States": {
+              "Track Topic (10)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[10]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (11)",
+            "States": {
+              "Track Topic (11)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[11]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (12)",
+            "States": {
+              "Track Topic (12)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[12]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (13)",
+            "States": {
+              "Track Topic (13)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[13]"
+              }
+            }
+          },
+          {
+            "StartAt": "Track Topic (14)",
+            "States": {
+              "Track Topic (14)": {
+                "Type": "Task",
+                "Resource":"arn:aws:lambda:ap-northeast-1:713960092195:function:qs_track_topic:$LATEST",
+                "Retry": [
+                  {
+                    "ErrorEquals": [
+                      "Lambda.ServiceException",
+                      "Lambda.AWSLambdaException",
+                      "Lambda.SdkClientException"
+                    ],
+                    "IntervalSeconds": 2,
+                    "MaxAttempts": 6,
+                    "BackoffRate": 2
+                  }
+                ],
+                "End": true,
+                "InputPath": "$[14]"
+              }
+            }
+          }
+        ],
+        "Next": "Log Result",
+        "InputPath": "$.data",
+        "ResultPath": "$.track_result"
+      },
+      "Log Result": {
+        "Type": "Task",
+        "Resource": "arn:aws:lambda:ap-northeast-1:713960092195:function:qs_log_result:$LATEST",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "End": true,
+        "InputPath": "$.track_result"
+      }
+    }
+  }
