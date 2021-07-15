@@ -1,4 +1,3 @@
-from selenium import webdriver
 import os
 
 
@@ -12,6 +11,7 @@ class Chrome():
                                          inspect)
 
     def chrome_create(self, driver_path, headless, auto_close, inspect):
+        from selenium import webdriver
         if driver_path != 'lambda':
             chrome_options = webdriver.ChromeOptions()
             if headless:
