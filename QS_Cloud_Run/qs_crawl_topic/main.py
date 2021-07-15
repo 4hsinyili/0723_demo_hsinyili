@@ -1,23 +1,21 @@
-# avoid import error on lambda get_ue_detail
-
-# for timing and not to get caught
-import time
-from datetime import datetime, timedelta
+from flask import Flask, jsonify, request
+import chromedriver_binary  # noqa
+import env
+import utils
+from models import Query
 import pytz
+from datetime import datetime, timedelta
+from lxml import etree
 
-from QS_Modules import env
-from QS_Modules import utils
-from QS_Modules.utils import Chrome
-from QS_Modules.models import Query
 
 LIST_URL = 'https://www.mobile01.com/newtopics.php'
-DRIVER_PATH = env.DRIVER_PATH
 
 MYSQL_PWD = env.MYSQL_PWD
 MYSQL_ACCOUNT = env.MYSQL_ACCOUNT
 MYSQL_ROUTE = env.MYSQL_ROUTE
 MYSQL_PORT = env.MYSQL_PORT
 MYSQL_DB = env.MYSQL_DB
+API_PWD = env.API_PWD
 
 LOCAL_TZ = pytz.timezone('Asia/Taipei')
 UTC_TZ = pytz.utc
@@ -39,9 +37,7 @@ class ListCrawler():
         self.triggered_at_str = utils.output_dt_str(triggered_at)
         self.triggered_at = utils.parse_dt_str(self.triggered_at_str)
 
-
     def parse(self, url):
-        from lxml import etree
         driver = self.driver
         driver.get(url)
         # driver.get_screenshot_as_file("screenshot.png")
@@ -137,10 +133,15 @@ class ListCrawler():
         return indexes
 
 
-if __name__ == '__main__':
-    start = time.time()
-    chrome = Chrome(DRIVER_PATH, False, False, False)
+app = Flask(__name__)
+
+
+@app.route("/")
+def main():
+    pwd = request.args.get('pwd')
+    if (not pwd) or (pwd != API_PWD):
+        return jsonify({'message': 'not allowed'})
+    chrome = utils.Chrome(headless=True, auto_close=True, inspect=False)
     list_crawler = ListCrawler(LIST_URL, chrome.driver)
-    list_crawler.main()
-    stop = time.time()
-    print(stop - start)
+    indexes = list_crawler.main()
+    return jsonify({'statusCode': 200, 'data': indexes})

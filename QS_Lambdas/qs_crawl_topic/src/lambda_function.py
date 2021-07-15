@@ -1,6 +1,6 @@
-from QS_Crawlers import lambda_modules  # type: ignore
+from QS_Crawlers import prod
 
 
 def lambda_handler(event, context, *args, **kwargs):
-    result = lambda_modules.get_topic()
+    result = prod.get_topic_lambda()
     return result

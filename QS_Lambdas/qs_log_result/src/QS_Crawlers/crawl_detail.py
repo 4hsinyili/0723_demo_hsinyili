@@ -1,11 +1,11 @@
 # avoid import error on lambda get_ue_detail
 from datetime import datetime
-from lxml import etree
 
 # for timing and not to get caught
 import time
 
 from QS_Modules import env
+from QS_Modules import utils
 from QS_Modules.utils import Chrome
 from QS_Modules.models import Query
 
@@ -31,9 +31,10 @@ class DetailCrawler():
         self.driver = driver
         self.offset = offset
         self.limit = limit
-        self.triggered_at = datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S')
+        self.triggered_at = utils.parse_dt_str(dt_str)
 
     def crawl(self, url):
+        from lxml import etree
         driver = self.driver
         driver.get(url)
         html = driver.page_source
@@ -59,7 +60,12 @@ class DetailCrawler():
                 tracks.append(track)
                 loop_count += 1
             except Exception:
-                print(url, ' failed.')
+                error = {
+                    'url': url,
+                    'topic_id': int(url.split('&t=')[-1]),
+                    'triggered_at': self.triggered_at
+                }
+                QUERY.insert_track_error(error)
         self.driver.quit()
         QUERY.insert_track(tracks)
         return len(urls), loop_count

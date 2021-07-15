@@ -1,21 +1,23 @@
-# avoid import error on lambda get_ue_detail
+from flask import Flask, jsonify, request
+import chromedriver_binary  # noqa
+import env
+import utils
+from models import Query
+import pytz
 from datetime import datetime
-
-# for timing and not to get caught
+from lxml import etree
 import time
 
-from QS_Modules import env
-from QS_Modules import utils
-from QS_Modules.utils import Chrome
-from QS_Modules.models import Query
-
-DRIVER_PATH = env.DRIVER_PATH
 
 MYSQL_PWD = env.MYSQL_PWD
 MYSQL_ACCOUNT = env.MYSQL_ACCOUNT
 MYSQL_ROUTE = env.MYSQL_ROUTE
 MYSQL_PORT = env.MYSQL_PORT
 MYSQL_DB = env.MYSQL_DB
+API_PWD = env.API_PWD
+
+LOCAL_TZ = pytz.timezone('Asia/Taipei')
+UTC_TZ = pytz.utc
 
 QUERY = Query(
     host=MYSQL_ROUTE,
@@ -34,7 +36,6 @@ class DetailCrawler():
         self.triggered_at = utils.parse_dt_str(dt_str)
 
     def crawl(self, url):
-        from lxml import etree
         driver = self.driver
         driver.get(url)
         html = driver.page_source
@@ -71,13 +72,33 @@ class DetailCrawler():
         return len(urls), loop_count
 
 
-if __name__ == '__main__':
-    offset = 0
-    limit = 10
-    dt_str = '2021-07-13 04:00'
-    start = time.time()
-    chrome = Chrome(DRIVER_PATH, True, True, False)
-    detail_crawler = DetailCrawler(chrome.driver, offset, limit, dt_str)
-    detail_crawler.main()
-    stop = time.time()
-    print(stop - start)
+app = Flask(__name__)
+
+
+@app.route("/")
+def main():
+    pwd = request.args.get('pwd')
+    if (not pwd) or (pwd != API_PWD):
+        return jsonify({'message': 'not allowed'})
+
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    triggered_at_str = request.args.get('triggered_at_str')
+
+    if limit == 0:
+        result = {
+            'target_topics_count': 0,
+            'execution_count': 0,
+            'triggered_at_str': triggered_at_str
+        }
+        return jsonify({"data": result})
+
+    chrome = utils.Chrome(headless=True, auto_close=True, inspect=False)
+    detail_crawler = DetailCrawler(chrome.driver, offset, limit, triggered_at_str)
+    target_topics_count, execution_count = detail_crawler.main()
+    result = {
+        'target_topics_count': target_topics_count,
+        'execution_count': execution_count,
+        'triggered_at_str': triggered_at_str
+    }
+    return jsonify({"data": result})

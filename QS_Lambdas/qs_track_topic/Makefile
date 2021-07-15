@@ -21,20 +21,6 @@ clean:		## delete pycache, build files
 	@rm -rf build build.zip
 	@rm -rf __pycache__
 
-fetch-dependencies:		## download chromedriver, headless-chrome to `./bin/`
-	@mkdir -p bin/
-
-	# Get chromedriver
-	curl -SL https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip > chromedriver.zip
-	unzip chromedriver.zip -d bin/
-
-	# Get Headless-chrome
-	curl -SL https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-57/stable-headless-chromium-amazonlinux-2017-03.zip > headless-chromium.zip
-	unzip headless-chromium.zip -d bin/
-
-	# Clean
-	@rm headless-chromium.zip chromedriver.zip
-
 docker-build:		## create Docker image
 	docker-compose build
 
@@ -42,7 +28,6 @@ docker-run:			## run `src.lambda_function.lambda_handler` with docker-compose
 	docker-compose run lambda src.lambda_function.lambda_handler
 
 build-lambda-package:		## prepares zip archive for AWS Lambda deploy (-> build/build.zip)
-	$(CONDA_ACTIVATE) python36 && $(CONDA_SHOW)
 	mkdir build
 	cp -r src build/.
 	cp -r bin build/.
@@ -53,4 +38,4 @@ build-lambda-package:		## prepares zip archive for AWS Lambda deploy (-> build/b
 	cp build/build.zip .
 	rm -rf build
 	
-## scp -i appworks_school_hsin_yi.pem ec2-user@54.179.123.235:QSearch_2nd_Round/QS_Lambdas/qs_track_topic/build.zip Documents/GitHub/QSearch_2nd_Round/QS_Lambdas/qs_track_topic/
+## scp -i appworks_school_hsin_yi.pem ec2-user@54.179.123.235:QSearch_2nd_Round/QS_Lambdas/qs_crawl_topic/build.zip Documents/GitHub/QSearch_2nd_Round/QS_Lambdas/qs_crawl_topic/

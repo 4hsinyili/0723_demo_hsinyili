@@ -1,5 +1,15 @@
-from selenium import webdriver
 import os
+from datetime import datetime
+
+
+def output_dt_str(dt_obj):
+    dt_str = datetime.strftime(dt_obj, '%Y-%m-%d-%H:%M:%S')
+    return dt_str
+
+
+def parse_dt_str(dt_str):
+    dt_obj = datetime.strptime(dt_str, '%Y-%m-%d-%H:%M:%S')
+    return dt_obj
 
 
 class Chrome():
@@ -12,6 +22,7 @@ class Chrome():
                                          inspect)
 
     def chrome_create(self, driver_path, headless, auto_close, inspect):
+        from selenium import webdriver
         if driver_path != 'lambda':
             chrome_options = webdriver.ChromeOptions()
             if headless:
@@ -27,11 +38,11 @@ class Chrome():
                 chrome_options.add_argument("--auto-open-devtools-for-tabs")
             chrome_options.add_experimental_option(
                 'prefs', {'intl.accept_languages': 'en,en_US'})
-            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-            chrome_options.add_experimental_option('useAutomationExtension', False)
-            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-            user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
-            chrome_options.add_argument(f'user-agent={user_agent}')
+            # chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+            # chrome_options.add_experimental_option('useAutomationExtension', False)
+            # chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+            # user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+            # chrome_options.add_argument(f'user-agent={user_agent}')
             driver = webdriver.Chrome(driver_path, options=chrome_options)
             driver.delete_all_cookies()
             driver.implicitly_wait(2)
@@ -74,9 +85,7 @@ class Chrome():
             options.add_argument("--disable-blink-features=AutomationControlled")
             user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
             options.add_argument(f'user-agent={user_agent}')
-            options.binary_location = os.getcwd() + "/bin/headless-chromium"
             driver = webdriver.Chrome(
-                executable_path=os.getcwd() + "/bin/chromedriver",
                 chrome_options=options)
             driver.implicitly_wait(8)
             return driver

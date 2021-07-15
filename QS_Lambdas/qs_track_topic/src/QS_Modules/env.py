@@ -20,3 +20,7 @@ DRIVER_PATH = os.getenv('DRIVER_PATH')
 ERROR_EMAIL = os.getenv('ERROR_EMAIL')
 ERROR_PWD = os.getenv('ERROR_PWD')
 MY_GMAIL = os.getenv('MY_GMAIL')
+
+API_PWD = os.getenv('API_PWD')
+CRAWL_TOPIC_API = os.getenv('CRAWL_TOPIC_API')
+TRACK_TOPIC_API = os.getenv('TRACK_TOPIC_API')

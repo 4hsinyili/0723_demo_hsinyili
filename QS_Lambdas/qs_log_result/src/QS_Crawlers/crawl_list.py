@@ -1,5 +1,4 @@
 # avoid import error on lambda get_ue_detail
-from lxml import etree
 
 # for timing and not to get caught
 import time
@@ -7,6 +6,7 @@ from datetime import datetime, timedelta
 import pytz
 
 from QS_Modules import env
+from QS_Modules import utils
 from QS_Modules.utils import Chrome
 from QS_Modules.models import Query
 
@@ -35,9 +35,13 @@ class ListCrawler():
     def __init__(self, url, driver):
         self.url = url
         self.driver = driver
-        self.triggered_at = datetime.utcnow()
+        triggered_at = datetime.utcnow()
+        self.triggered_at_str = utils.output_dt_str(triggered_at)
+        self.triggered_at = utils.parse_dt_str(self.triggered_at_str)
+
 
     def parse(self, url):
+        from lxml import etree
         driver = self.driver
         driver.get(url)
         # driver.get_screenshot_as_file("screenshot.png")
@@ -70,7 +74,7 @@ class ListCrawler():
         QUERY.insert_monitor(record)
 
     def dispatch(self, records_count):
-        lamdas_count = 10
+        lamdas_count = 15
         divider = records_count // lamdas_count
         print('Now each tracker will track ', divider, ' results.')
         offsets = [i * divider for i in range(lamdas_count)]
@@ -82,7 +86,7 @@ class ListCrawler():
             'offset': offsets[i],
             'limit': limits[i],
             'sleep': sleep_list[i],
-            'triggered_at_str': datetime.strftime(self.triggered_at, '%Y-%m-%d %H:%M:%S')
+            'triggered_at_str': self.triggered_at_str
         } for i in range(lamdas_count)]
         return indexes
 
@@ -119,21 +123,23 @@ class ListCrawler():
                 'triggered_at': self.triggered_at
                 }
             records.append(record)
-        self.driver.quit()
+        # self.driver.quit()
 
         QUERY.insert_topic(records)
         QUERY.update_stop_track()
 
         records_count = len(records)
         self.log(records_count)
-        indexes = self.dispatch(records_count)
+
+        urls_count = QUERY.get_urls_count()
+        indexes = self.dispatch(urls_count)
 
         return indexes
 
 
 if __name__ == '__main__':
     start = time.time()
-    chrome = Chrome(DRIVER_PATH, True, True, False)
+    chrome = Chrome(DRIVER_PATH, False, False, False)
     list_crawler = ListCrawler(LIST_URL, chrome.driver)
     list_crawler.main()
     stop = time.time()
