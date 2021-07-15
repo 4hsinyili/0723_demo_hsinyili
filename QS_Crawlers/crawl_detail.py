@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 
 from QS_Modules import env
+from QS_Modules import utils
 from QS_Modules.utils import Chrome
 from QS_Modules.models import Query
 
@@ -30,7 +31,7 @@ class DetailCrawler():
         self.driver = driver
         self.offset = offset
         self.limit = limit
-        self.triggered_at = datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S')
+        self.triggered_at = utils.parse_dt_str(dt_str)
 
     def crawl(self, url):
         from lxml import etree

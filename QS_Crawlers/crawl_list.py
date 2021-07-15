@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import pytz
 
 from QS_Modules import env
+from QS_Modules import utils
 from QS_Modules.utils import Chrome
 from QS_Modules.models import Query
 
@@ -34,7 +35,9 @@ class ListCrawler():
     def __init__(self, url, driver):
         self.url = url
         self.driver = driver
-        self.triggered_at = datetime.utcnow()
+        triggered_at = datetime.utcnow()
+        self.triggered_at_str = utils.output_dt_str(triggered_at)
+        self.triggered_at = utils.parse_dt_str(self.triggered_at_str)
 
     def parse(self, url):
         from lxml import etree
@@ -82,7 +85,7 @@ class ListCrawler():
             'offset': offsets[i],
             'limit': limits[i],
             'sleep': sleep_list[i],
-            'triggered_at_str': datetime.strftime(self.triggered_at, '%Y-%m-%d %H:%M:%S')
+            'triggered_at_str': self.triggered_at_str
         } for i in range(lamdas_count)]
         return indexes
 
