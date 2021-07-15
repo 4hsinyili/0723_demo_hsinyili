@@ -73,7 +73,7 @@ class ListCrawler():
         QUERY.insert_monitor(record)
 
     def dispatch(self, records_count):
-        lamdas_count = 10
+        lamdas_count = 15
         divider = records_count // lamdas_count
         print('Now each tracker will track ', divider, ' results.')
         offsets = [i * divider for i in range(lamdas_count)]
