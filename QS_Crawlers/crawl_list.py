@@ -129,7 +129,9 @@ class ListCrawler():
 
         records_count = len(records)
         self.log(records_count)
-        indexes = self.dispatch(records_count)
+
+        urls_count = QUERY.get_urls_count()
+        indexes = self.dispatch(urls_count)
 
         return indexes
 
