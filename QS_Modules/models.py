@@ -131,6 +131,16 @@ class Query():
         else:
             return None
 
+    def get_urls_count(self):
+        session = self.session
+        raw = session.query(Topic).filter(Topic.stop_track == 0).count()
+        session.close()
+        if raw:
+            result = raw
+            return result
+        else:
+            return None
+
     def get_view_counts(self, url):
         session = self.session
         query = session.query(Track).filter(Track.url == url).order_by(Track.id)
