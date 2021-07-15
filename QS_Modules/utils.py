@@ -1,4 +1,15 @@
 import os
+from datetime import datetime
+
+
+def output_dt_str(dt_obj):
+    dt_str = datetime.strftime(dt_obj, '%Y-%m-%d-%H:%M:%S')
+    return dt_str
+
+
+def parse_dt_str(dt_str):
+    dt_obj = datetime.strptime(dt_str, '%Y-%m-%d-%H:%M:%S')
+    return dt_obj
 
 
 class Chrome():
