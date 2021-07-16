@@ -4,6 +4,7 @@ import traceback
 
 # for timing and not to get caught
 import time
+import random
 
 from QS_Modules import env
 from QS_Modules import utils
@@ -67,6 +68,7 @@ class DetailCrawler():
         execution_count = 0
         for url in urls:
             try:
+                time.sleep(random.randint(3, 10))
                 view_count = self.crawl(url)
                 track = {
                     'url': url,

@@ -188,7 +188,7 @@ class Query():
         session = self.check_session()
         now = datetime.utcnow()
         session.query(Topic).filter(Topic.stop_track == 0)\
-            .filter(Topic.stop_track_at <= now).update({'stop_track': 1})
+            .filter(Topic.stop_track_at < now).update({'stop_track': 1})
         session.commit()
         session.close()
 
