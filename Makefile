@@ -70,6 +70,10 @@ test-cloud-run-package:
 
 	docker build -t qstracktopic .
 	docker run --rm -p 8080:8080 -e PORT=8080 qstracktopic
+# http://localhost:8080?pwd=ihatecloudflare&offset=0&limit=9&sleep=0&triggered_at_str=2021-07-15-08:25:19
+
+	docker build -t qscloudruniptest .
+	docker run --rm -p 8080:8080 -e PORT=8080 qscloudruniptest
 
 submit-cloud-run-package:
 	gcloud builds submit --tag gcr.io/qsearchcrawl/qscrawltopic
@@ -77,3 +81,6 @@ submit-cloud-run-package:
 
 	gcloud builds submit --tag gcr.io/qsearchcrawl/qstracktopic
 	gcloud beta run deploy qstracktopic --image gcr.io/qsearchcrawl/qstracktopic --region asia-east1 --platform managed
+
+	gcloud builds submit --tag gcr.io/qsearchcrawl/qscloudruniptest
+	gcloud beta run deploy qscloudruniptest --image gcr.io/qsearchcrawl/qscloudruniptest --region asia-east1 --platform managed
