@@ -5,7 +5,8 @@ import utils
 from models import Query
 import pytz
 from datetime import datetime, timedelta
-from lxml import etree
+import time
+import random
 
 
 LIST_URL = 'https://www.mobile01.com/newtopics.php'
@@ -38,11 +39,18 @@ class ListCrawler():
         self.triggered_at = utils.parse_dt_str(self.triggered_at_str)
 
     def parse(self, url):
+        from lxml import etree
         driver = self.driver
         driver.get(url)
         # driver.get_screenshot_as_file("screenshot.png")
         html = driver.page_source
         selector = etree.HTML(html)
+        try:
+            page_title = selector.xpath('//div[@class="l-heading__title"]/h1[@class="t1"]')[0].text
+        except Exception:
+            page_title = '被擋了'
+        if page_title != "新進文章":
+            raise ValueError
         rows_with_top = selector.xpath('//div[@class="l-listTable__tr"]')
         rows = rows_with_top[1:]
         content = []
@@ -56,7 +64,7 @@ class ListCrawler():
             post_time = datetime.strptime(post_time_raw, '%Y-%m-%d %H:%M')
             post_time = LOCAL_TZ.localize(post_time)
             post_time = post_time.astimezone(UTC_TZ)
-            stop_track_at = post_time + timedelta(hours=7)
+            stop_track_at = post_time + timedelta(hours=6)
             author = row.xpath('.//div[@class="l-listTable__td l-listTable__td--time"]')[0]\
                 .xpath('./div/a')[0].text
             content.append((link, title, topic_id, post_time, stop_track_at, author))
@@ -70,14 +78,14 @@ class ListCrawler():
         QUERY.insert_monitor(record)
 
     def dispatch(self, records_count):
-        lamdas_count = 15
-        divider = records_count // lamdas_count
+        divider = 9
+        lamdas_count = records_count // divider
         print('Now each tracker will track ', divider, ' results.')
         offsets = [i * divider for i in range(lamdas_count)]
         limits = [divider for i in range(lamdas_count - 1)]
         remainder = records_count - offsets[-1]
         limits.append(remainder)
-        sleep_list = [i*1.5 for i in range(lamdas_count)]
+        sleep_list = [0 for i in range(lamdas_count)]
         indexes = [{
             'offset': offsets[i],
             'limit': limits[i],
@@ -94,9 +102,10 @@ class ListCrawler():
         topics = set()
         end = False
         while not end:
+            time.sleep(random.randint(1, 3))
             content = self.parse(f'{url}?p={page}')
             for pair in content:
-                if latest_id != pair[2]:
+                if latest_id < pair[2]:
                     topics.add(pair)
                 else:
                     end = True
@@ -119,7 +128,7 @@ class ListCrawler():
                 'triggered_at': self.triggered_at
                 }
             records.append(record)
-        # self.driver.quit()
+        self.driver.quit()
 
         QUERY.insert_topic(records)
         QUERY.update_stop_track()
