@@ -79,14 +79,14 @@ class ListCrawler():
         QUERY.insert_monitor(record)
 
     def dispatch(self, records_count):
-        lamdas_count = 15
-        divider = records_count // lamdas_count
+        divider = 9
+        lamdas_count = records_count // divider
         print('Now each tracker will track ', divider, ' results.')
         offsets = [i * divider for i in range(lamdas_count)]
         limits = [divider for i in range(lamdas_count - 1)]
         remainder = records_count - offsets[-1]
         limits.append(remainder)
-        sleep_list = [i*1.5 for i in range(lamdas_count)]
+        sleep_list = [0 for i in range(lamdas_count)]
         indexes = [{
             'offset': offsets[i],
             'limit': limits[i],
