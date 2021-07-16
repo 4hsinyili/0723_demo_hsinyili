@@ -105,7 +105,7 @@ class ListCrawler():
         while not end:
             content = self.parse(f'{url}?p={page}')
             for pair in content:
-                if latest_id != pair[2]:
+                if latest_id < pair[2]:
                     topics.add(pair)
                 else:
                     end = True
