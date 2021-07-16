@@ -2,6 +2,7 @@
 
 # for timing and not to get caught
 import time
+import random
 from datetime import datetime, timedelta
 import pytz
 
@@ -103,6 +104,7 @@ class ListCrawler():
         topics = set()
         end = False
         while not end:
+            time.sleep(random.randint(1, 3))
             content = self.parse(f'{url}?p={page}')
             for pair in content:
                 if latest_id < pair[2]:
