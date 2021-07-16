@@ -36,12 +36,14 @@ class Track(Base):
     __tablename__ = 'track'
     id = Column(Integer, primary_key=True)
     url = Column(ForeignKey('topic.url'))
+    topic_id = Column(Integer)
     created_at = Column(DateTime)
     triggered_at = Column(DateTime)
     view_count = Column(Integer)
 
-    def __init__(self, url, created_at, triggered_at, view_count):
+    def __init__(self, url, topic_id, created_at, triggered_at, view_count):
         self.url = url
+        self.topic_id = topic_id
         self.created_at = created_at
         self.triggered_at = triggered_at
         self.view_count = view_count
@@ -70,11 +72,17 @@ class TrackError(Base):
     triggered_at = Column(DateTime)
     topic_id = Column(Integer)
     url = Column(String(255))
+    loop_count = Column(Integer)
+    offset = Column(Integer)
+    message = Column(String(10000))
 
-    def __init__(self, triggered_at, topic_id, url):
+    def __init__(self, triggered_at, topic_id, url, loop_count, offset, message):
         self.triggered_at = triggered_at
         self.topic_id = topic_id
         self.url = url
+        self.loop_count = loop_count
+        self.offset = offset
+        self.message = message
 
 
 class Query():
