@@ -107,12 +107,13 @@ class DetailCrawler():
 
 
 if __name__ == '__main__':
-    offset = 0
-    limit = 10
-    dt_str = '2021-07-13 04:00'
+    offset = 45
+    limit = 2
+    dt_str = '2021-07-13-04:00:00'
     start = time.time()
-    chrome = Chrome(DRIVER_PATH, True, True, False)
+    chrome = Chrome(DRIVER_PATH, False, False, False)
     detail_crawler = DetailCrawler(chrome.driver, offset, limit, dt_str)
     detail_crawler.main()
+    detail_crawler.crawl('https://www.mobile01.com/topicdetail.php?f=318&t=6410958')
     stop = time.time()
     print(stop - start)
