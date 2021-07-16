@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 import time
 
@@ -57,9 +56,12 @@ class Chrome():
                 chrome_options.add_argument("--auto-open-devtools-for-tabs")
             chrome_options.add_experimental_option(
                 'prefs', {'intl.accept_languages': 'en,en_US'})
-            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-            chrome_options.add_experimental_option('useAutomationExtension', False)
-            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+            chrome_options.add_experimental_option("excludeSwitches",
+                                                   ["enable-automation"])
+            chrome_options.add_experimental_option('useAutomationExtension',
+                                                   False)
+            chrome_options.add_argument(
+                "--disable-blink-features=AutomationControlled")
             user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
             chrome_options.add_argument(f'user-agent={user_agent}')
             driver = webdriver.Chrome(driver_path, options=chrome_options)
@@ -97,14 +99,13 @@ class Chrome():
 
             for argument in lambda_options:
                 options.add_argument(argument)
-
             options.add_experimental_option("excludeSwitches", ["enable-automation"])
             options.add_experimental_option('useAutomationExtension', False)
-            options.add_argument("--disable-blink-features=AutomationControlled")
+            options.add_argument(
+                "--disable-blink-features=AutomationControlled")
             user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
             options.add_argument(f'user-agent={user_agent}')
-            driver = webdriver.Chrome(
-                chrome_options=options)
+            driver = webdriver.Chrome(chrome_options=options)
             driver.implicitly_wait(8)
             return driver
 
