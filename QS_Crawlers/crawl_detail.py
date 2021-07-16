@@ -72,6 +72,7 @@ class DetailCrawler():
                 view_count = self.crawl(url)
                 track = {
                     'url': url,
+                    'topic_id': int(url.split('&t=')[-1]),
                     'created_at': datetime.utcnow(),
                     'triggered_at': self.triggered_at,
                     'view_count': view_count
