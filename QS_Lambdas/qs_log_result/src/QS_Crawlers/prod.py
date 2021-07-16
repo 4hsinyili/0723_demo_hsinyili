@@ -8,6 +8,10 @@ import time
 from flask import jsonify, request
 import urllib.request
 import json
+# for email error
+import logging
+import logging.handlers
+
 
 DRIVER_PATH = env.DRIVER_PATH
 MYSQL_PWD = env.MYSQL_PWD
@@ -28,6 +32,29 @@ LIST_URL = 'https://www.mobile01.com/newtopics.php'
 CRAWL_TOPIC_API = env.CRAWL_TOPIC_API
 TRACK_TOPIC_API = env.TRACK_TOPIC_API
 API_PWD = env.API_PWD
+
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO,
+    filename='log.log')
+
+logger = logging.getLogger(__name__)
+
+smtp_handler = logging.handlers.SMTPHandler(mailhost=('smtp.gmail.com', 587),
+                                            fromaddr=env.ERROR_EMAIL,
+                                            toaddrs=[env.MY_GMAIL],
+                                            subject='Error',
+                                            credentials=(env.ERROR_EMAIL,
+                                                         env.ERROR_PWD),
+                                            secure=())
+logger.addHandler(smtp_handler)
+
+
+def warn(err_name):
+    """Log Errors"""
+    print("Something's wrong, check your mail.")
+    logger.info(err_name)
 
 
 def get_topic_lambda():
@@ -99,6 +126,8 @@ def log_lambda(event):
     triggered_at = utils.parse_dt_str(triggered_at_str)
     end_at = datetime.utcnow()
     QUERY.update_monitor(triggered_at, target_topics_count, end_at, execution_count)
+    if ((target_topics_count - execution_count) > 10) or (execution_count <= 5):
+        warn('numbers abnormal')
 
 
 def main():

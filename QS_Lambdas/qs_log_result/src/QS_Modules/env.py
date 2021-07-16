@@ -21,6 +21,9 @@ ERROR_EMAIL = os.getenv('ERROR_EMAIL')
 ERROR_PWD = os.getenv('ERROR_PWD')
 MY_GMAIL = os.getenv('MY_GMAIL')
 
+MOBILE01_EMAIL = os.getenv('MOBILE01_EMAIL')
+MOBILE01_PWD = os.getenv('MOBILE01_PWD')
+
 API_PWD = os.getenv('API_PWD')
 CRAWL_TOPIC_API = os.getenv('CRAWL_TOPIC_API')
 TRACK_TOPIC_API = os.getenv('TRACK_TOPIC_API')
