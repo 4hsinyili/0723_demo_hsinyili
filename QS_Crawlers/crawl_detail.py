@@ -1,5 +1,6 @@
 # avoid import error on lambda get_ue_detail
 from datetime import datetime
+import traceback
 
 # for timing and not to get caught
 import time
@@ -16,6 +17,8 @@ MYSQL_ACCOUNT = env.MYSQL_ACCOUNT
 MYSQL_ROUTE = env.MYSQL_ROUTE
 MYSQL_PORT = env.MYSQL_PORT
 MYSQL_DB = env.MYSQL_DB
+MOBILE01_EMAIL = env.MOBILE01_EMAIL
+MOBILE01_PWD = env.MOBILE01_PWD
 
 QUERY = Query(
     host=MYSQL_ROUTE,
@@ -44,10 +47,24 @@ class DetailCrawler():
             )
         return view_count
 
+    def log_error(self, error_pair):
+        message = traceback.format_exc()
+        error = {
+            'url': error_pair[0],
+            'topic_id': error_pair[1],
+            'triggered_at': error_pair[2],
+            'loop_count': error_pair[3],
+            'offset': error_pair[4],
+            'message': message
+        }
+        QUERY.insert_track_error(error)
+
     def main(self):
         urls = QUERY.get_urls(self.offset, self.limit)
         tracks = []
+        need_login = []
         loop_count = 0
+        execution_count = 0
         for url in urls:
             try:
                 view_count = self.crawl(url)
@@ -58,17 +75,33 @@ class DetailCrawler():
                     'view_count': view_count
                 }
                 tracks.append(track)
-                loop_count += 1
+                execution_count += 1
             except Exception:
-                error = {
-                    'url': url,
-                    'topic_id': int(url.split('&t=')[-1]),
-                    'triggered_at': self.triggered_at
-                }
-                QUERY.insert_track_error(error)
+                topic_id = int(url.split('&t=')[-1])
+                tmp = (url, topic_id, self.triggered_at, loop_count, self.offset)
+                need_login.append(tmp)
+            loop_count += 1
+
+        if need_login != []:
+            utils.login_mobile01(self.driver, MOBILE01_EMAIL, MOBILE01_PWD)
+            for error_pair in need_login:
+                try:
+                    time.sleep(random.randint(3, 10))
+                    view_count = self.crawl(error_pair[0])
+                    track = {
+                        'url': error_pair[0],
+                        'topic_id': error_pair[0][1],
+                        'created_at': datetime.utcnow(),
+                        'triggered_at': self.triggered_at,
+                        'view_count': view_count
+                    }
+                    tracks.append(track)
+                except Exception:
+                    self.log_error(error_pair)
+
         self.driver.quit()
         QUERY.insert_track(tracks)
-        return len(urls), loop_count
+        return len(urls), execution_count
 
 
 if __name__ == '__main__':

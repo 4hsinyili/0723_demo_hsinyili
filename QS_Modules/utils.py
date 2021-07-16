@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+import time
 
 
 def output_dt_str(dt_obj):
@@ -10,6 +11,24 @@ def output_dt_str(dt_obj):
 def parse_dt_str(dt_str):
     dt_obj = datetime.strptime(dt_str, '%Y-%m-%d-%H:%M:%S')
     return dt_obj
+
+
+def login_mobile01(driver, account, pwd):
+    from selenium.webdriver.common.keys import Keys
+
+    url = 'https://www.mobile01.com/login.php'
+
+    driver.get(url)
+    driver.find_element_by_xpath('//input[@id="regEmail"]').send_keys(account)
+    driver.find_element_by_xpath('//input[@id="regPassword"]').send_keys(pwd)
+    driver.find_element_by_xpath('//input[@id="remember_me"]').click()
+    time.sleep(1)
+    driver.find_element_by_xpath('//button[@id="submitBtn"]').send_keys(Keys.ENTER)
+    time.sleep(2)
+    try:
+        driver.find_element_by_xpath('//a[contains(.,"確認")]').send_keys(Keys.ENTER)
+    except Exception:
+        pass
 
 
 class Chrome():
