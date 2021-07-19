@@ -109,7 +109,7 @@ class DetailCrawler():
 
 if __name__ == '__main__':
     offset = 45
-    limit = 10
+    limit = 2
     dt_str = '2021-07-13-04:00:00'
     start = time.time()
     chrome = Chrome(DRIVER_PATH, False, False, False)

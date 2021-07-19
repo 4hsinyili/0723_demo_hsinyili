@@ -47,6 +47,12 @@ class ListCrawler():
         # driver.get_screenshot_as_file("screenshot.png")
         html = driver.page_source
         selector = etree.HTML(html)
+        try:
+            page_title = selector.xpath('//div[@class="l-heading__title"]/h1[@class="t1"]')[0].text
+        except Exception:
+            page_title = '被擋了'
+        if page_title != "新進文章":
+            raise ValueError
         rows_with_top = selector.xpath('//div[@class="l-listTable__tr"]')
         rows = rows_with_top[1:]
         content = []
