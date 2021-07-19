@@ -39,6 +39,7 @@ class ListCrawler():
         triggered_at = datetime.utcnow()
         self.triggered_at_str = utils.output_dt_str(triggered_at)
         self.triggered_at = utils.parse_dt_str(self.triggered_at_str)
+        self.stop_track_at = self.triggered_at + timedelta(hours=7)
 
     def parse(self, url):
         from lxml import etree
@@ -63,10 +64,11 @@ class ListCrawler():
             title = row.xpath('.//div[@class="c-listTableTd__title"]/a')[0].text
             post_time_raw = row.xpath('.//div[@class="l-listTable__td l-listTable__td--time"]')[0]\
                 .xpath('./div')[1].text
+            # post_time_raw doesn't contain second!
             post_time = datetime.strptime(post_time_raw, '%Y-%m-%d %H:%M')
             post_time = LOCAL_TZ.localize(post_time)
             post_time = post_time.astimezone(UTC_TZ)
-            stop_track_at = post_time + timedelta(hours=6)
+            stop_track_at = self.stop_track_at
             author = row.xpath('.//div[@class="l-listTable__td l-listTable__td--time"]')[0]\
                 .xpath('./div/a')[0].text
             content.append((link, title, topic_id, post_time, stop_track_at, author))
@@ -98,7 +100,7 @@ class ListCrawler():
 
     def main(self):
         url = self.url
-        QUERY.update_stop_track()
+        # QUERY.update_stop_track()
         page = 1
         latest_id = QUERY.get_latest_topic_id()
         topics = set()
