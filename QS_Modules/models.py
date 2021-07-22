@@ -1,3 +1,4 @@
+# SqlAlchemy
 import sqlalchemy
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -208,5 +209,11 @@ class Query():
         session = self.check_session()
         record = TrackError(**error)
         session.add(record)
+        session.commit()
+        session.close()
+
+    def stop_track_relocated_topic(self, topic_id):
+        session = self.check_session()
+        session.query(Topic).filter(Topic.topic_id == topic_id).update({'stop_track': 1})
         session.commit()
         session.close()
