@@ -77,8 +77,120 @@ def sele_send_text(driver, text):
     return headers, params
 
 
-def str_base(num, b=36, numerals="0123456789abcdefghijklmnopqrstuvwxyz"):
-    return ((num == 0) and numerals[0]) or (str_base(num // b, b, numerals).lstrip(numerals[0]) + numerals[num % b])
+class HTTPFB():
+    def __init__(self, headers, email, pwd, msg, thread_id):
+        self.headers = headers
+        self.session = requests.session()
+        self.email = email
+        self.pwd = pwd
+        self.msg = msg
+        self.thread_id = str(thread_id)
+
+    def get_token(self):
+        session = self.session
+        co = session.get('https://www.messenger.com').text
+        lsd_token = co.split('LSD')[1].split('"token":"')[1].split('"')[0]
+        initreqid = co.split('initialRequestID":"', 1)[1].split('"', 1)[0]
+        timezone = -480
+        lgnrnd = co.split('name="lgnrnd" value="', 1)[1].split('"', 1)[0]
+        lgnjs = int(time.time())
+        identifier = co.split('identifier":"', 1)[1].split('"', 1)[0]
+        datr = co.split('"_js_datr","', 1)[1].split('"', 1)[0]
+        session.cookies.update({'_js_datr': datr})
+
+        self.initreqid = initreqid
+        self.identifier = identifier
+        self.messenger_com_data = {
+            'lsd': lsd_token,
+            'initial_request_id': initreqid,
+            'timezone': timezone,
+            'lgnrnd': lgnrnd,
+            'lgnjs': lgnjs,
+        }
+
+    def login(self):
+        session = self.session
+        r = session.get(
+            'https://www.facebook.com/login/messenger_dot_com_iframe/',
+            params={
+                'redirect_uri':
+                'https://www.messenger.com/login/fb_iframe_target/?initial_request_id={}'
+                .format(self.initreqid),
+                'identifier':
+                self.identifier,
+                'initial_request_id':
+                self.initreqid
+            })
+
+        login_params = self.messenger_com_data
+        login_params['email'] = self.email
+        login_params['pass'] = self.pwd
+        login_params['default_persistent'] = 0
+
+        r = session.post('https://www.messenger.com/login/password/',
+                         login_params,
+                         headers=self.headers)
+        data = r.text
+        return data
+
+    def parse_data(self, data):
+        thread_id = self.thread_id
+        msg = self.msg
+        dtsg_token = data.split('"token":"', 1)[1].split('"', 1)[0]
+        ttstamp = '2'
+        for w in range(len(dtsg_token)):
+            ttstamp += str(ord(dtsg_token[w]))
+
+        rev = data.split('revision":', 1)[1].split(',', 1)[0]
+        uid = data.split('USER_ID":"', 1)[1].split('"', 1)[0]
+
+        _id = random.randint(0, 999999999999999999)
+        data = {
+            'action_type': 'ma-type:user-generated-message',
+            'author': 'fbid:' + uid,
+            'source': 'source:messenger:web',
+            'body': msg,
+            'has_attachment': 'false',
+            'html_body': 'false',
+            'timestamp': int(time.time() * 1000),
+            'offline_threading_id': _id,
+            'message_id': _id,
+            'client': 'mercury',
+            'fb_dtsg': dtsg_token,
+            'ttstamp': ttstamp,
+            'specific_to_list[0]': 'fbid:' + thread_id,
+            'specific_to_list[1]': 'fbid:' + uid,
+            'other_user_fbid': thread_id
+        }
+        return data, uid, rev
+
+    # def str_base(self,
+    #              num,
+    #              b=36,
+    #              numerals="0123456789abcdefghijklmnopqrstuvwxyz"):
+    #     return ((num == 0) and numerals[0]) or (self.str_base(
+    #         num // b, b, numerals).lstrip(numerals[0]) + numerals[num % b])
+
+    def send_req(self, data, uid, rev):
+        session = self.session
+        defurl = 'https://www.messenger.com'
+        endpoint = 'https://www.messenger.com/messaging/send/'
+        defdata = {
+            '__user': uid,
+            '__a': 1,
+            '__req': '0',
+            '__rev': rev
+        }
+        data.update(defdata)
+        resp = session.post(endpoint, data, headers={'Referer': defurl})
+        return resp
+
+    def main(self):
+        self.get_token()
+        data = self.login()
+        data, uid, rev = self.parse_data(data)
+        response = self.send_req(data, uid, rev)
+        print(response)
 
 
 headers = {
@@ -91,110 +203,10 @@ headers = {
     "Referer": "https://www.messenger.com/",
 }
 
-email = 'bnxmhpbgmb_1626509584@tfbnw.net'
-pwd = "fbtest1626509584"
-email = 'yidon62086@godpeed.com'
-pwd = 'fbtest0718'
-qsearch_thread = 430401096982804
-
-
-session = requests.session()
-
-co = session.get('https://www.messenger.com').text
-lsd_token = co.split('LSD')[1].split('"token":"')[1].split('"')[0]
-initreqid = co.split('initialRequestID":"', 1)[1].split('"', 1)[0]
-timezone = -480
-lgnrnd = co.split('name="lgnrnd" value="', 1)[1].split('"', 1)[0]
-lgnjs = int(time.time())
-identifier = co.split('identifier":"', 1)[1].split('"', 1)[0]
-datr = co.split('"_js_datr","', 1)[1].split('"', 1)[0]
-session.cookies.update({'_js_datr': datr})
-
-session.get(
-    'https://www.facebook.com/login/messenger_dot_com_iframe/',
-    params={
-        'redirect_uri':
-        'https://www.messenger.com/login/fb_iframe_target/?initial_request_id={}'
-        .format(initreqid),
-        'identifier':
-        identifier,
-        'initial_request_id':
-        initreqid
-    })
-
-r = session.post('https://www.messenger.com/login/password/', {
-    'lsd': lsd_token,
-    'initial_request_id': initreqid,
-    'timezone': timezone,
-    'lgnrnd': lgnrnd,
-    'lgnjs': lgnjs,
-    'email': email,
-    'pass': pwd,
-    'default_persistent': 0
-},
-                 headers=headers)
-
-print(r)
-print(r.url)
-
-data = r.text
-
-dtsg_token = data.split('"token":"', 1)[1].split('"', 1)[0]
-ttstamp = '2'
-for w in range(len(dtsg_token)):
-    ttstamp += str(ord(dtsg_token[w]))
-reqid = 0
-uploadid = 1023
-sessid = str_base(random.randint(0, 2147483647), 16)
-
-rev = data.split('revision":', 1)[1].split(',', 1)[0]
-uid = data.split('USER_ID":"', 1)[1].split('"', 1)[0]
-
-# thread_id = 100070719168616
-thread_id = qsearch_thread
-
-msg = '測試'
-
-thread_id = str(thread_id)
-msg = str(msg)
-
-_id = random.randint(0, 999999999999999999)
-data = {'action_type': 'ma-type:user-generated-message',
-        'author': 'fbid:' + uid,
-        'source': 'source:messenger:web',
-        'body': msg,
-        'has_attachment': 'false',
-        'html_body': 'false',
-        'timestamp': int(time.time() * 1000),
-        'offline_threading_id': _id,
-        'message_id': _id,
-        'client': 'mercury', 'fb_dtsg': dtsg_token, 'ttstamp': ttstamp}
-userdata = {'specific_to_list[0]': 'fbid:' + thread_id,
-            'specific_to_list[1]': 'fbid:' + uid,
-            'other_user_fbid': thread_id}
-data.update(userdata)
-reqid = 0
-
-
-def send_req(url, reqtype, data, sess):
-    defurl = 'https://www.messenger.com'
-    defdata = {'__user': uid, '__a': 1, '__req': str_base(0), '__rev': rev}
-    data.update(defdata)
-
-    if reqtype:
-        resp = sess.post(defurl + url, data, headers={'Referer': defurl})
-    else:
-        resp = sess.get(defurl + url, params=data, headers={'Referer': defurl})
-
-    return resp
-
-
-req = send_req('/messaging/send/', 1, data, session)
-print(req)
-result = json.loads(req.text[9:])['payload']
-print(result)
-
-
-# Reference
-# https://www.gushiciku.cn/dc_tw/352818
-# https://stephensclafani.com/2017/03/21/stealing-messenger-com-login-nonces/
+if __name__ == '__main__':
+    QSEARCH_THREAD = 430401096982804
+    thread_id = 100070719168616
+    # thread_id = QSEARCH_THREAD
+    msg = '測試0721'
+    http_fb = HTTPFB(headers, FB_TEST_EMAIL, FB_TEST_PWD, msg, thread_id)
+    http_fb.main()
