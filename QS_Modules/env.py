@@ -27,3 +27,8 @@ MOBILE01_PWD = os.getenv('MOBILE01_PWD')
 API_PWD = os.getenv('API_PWD')
 CRAWL_TOPIC_API = os.getenv('CRAWL_TOPIC_API')
 TRACK_TOPIC_API = os.getenv('TRACK_TOPIC_API')
+
+FB_TEST_EMAIL = os.getenv('FB_TEST_EMAIL')
+FB_TEST_PWD = os.getenv('FB_TEST_PWD')
+FB_REAL_EMAIL = os.getenv('FB_REAL_EMAIL')
+FB_REAL_PWD = os.getenv('FB_REAL_PWD')

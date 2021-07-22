@@ -1,11 +1,12 @@
-# avoid import error on lambda get_ue_detail
+# dateteime, time and random
 from datetime import datetime
-import traceback
-
-# for timing and not to get caught
 import time
 import random
 
+# log error as str
+import traceback
+
+# homemade modules
 from QS_Modules import env
 from QS_Modules import utils
 from QS_Modules.utils import Chrome

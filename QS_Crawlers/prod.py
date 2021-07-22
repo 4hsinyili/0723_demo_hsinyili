@@ -1,16 +1,22 @@
+# datetime and time
 from datetime import datetime
+import time
+
+# API calling and parsing
+from flask import jsonify, request
+import urllib.request
+import json
+
+# for email error
+import logging
+import logging.handlers
+
+# homemade modules
 from QS_Crawlers.crawl_detail import DetailCrawler
 from QS_Crawlers.crawl_list import ListCrawler
 from QS_Modules import utils
 from QS_Modules import env
 from QS_Modules.models import Query
-import time
-from flask import jsonify, request
-import urllib.request
-import json
-# for email error
-import logging
-import logging.handlers
 
 
 DRIVER_PATH = env.DRIVER_PATH

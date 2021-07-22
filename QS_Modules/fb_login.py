@@ -1,13 +1,23 @@
-from QS_Modules import env
+# Selenium and Selenium-Wire
 from seleniumwire import webdriver
 from selenium.webdriver.common.keys import Keys
-import requests
 from selenium.webdriver.common.action_chains import ActionChains
+
+# requests
+import requests
+
+# time and random
 import time
 import random
-import json
+
+# homemade modules
+from QS_Modules import env
 
 DRIVER_PATH = env.DRIVER_PATH
+FB_TEST_EMAIL = env.FB_TEST_EMAIL
+FB_TEST_PWD = env.FB_TEST_PWD
+FB_REAL_EMAIL = env.FB_REAL_EMAIL
+FB_REAL_PWD = env.FB_REAL_PWD
 
 
 def create_driver(headless=False):

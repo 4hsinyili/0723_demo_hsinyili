@@ -1,11 +1,10 @@
-# avoid import error on lambda get_ue_detail
-
-# for timing and not to get caught
+# dateteime, time and random
 import time
 import random
 from datetime import datetime, timedelta
 import pytz
 
+# homemade modules
 from QS_Modules import env
 from QS_Modules import utils
 from QS_Modules.utils import Chrome
