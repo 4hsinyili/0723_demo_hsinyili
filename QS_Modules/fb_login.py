@@ -45,10 +45,10 @@ def create_driver(headless=False):
     return driver
 
 
-def sele_login(driver):
+def sele_login(driver, email, pwd):
     driver.get('https://www.messenger.com/t/100001752617744')
-    driver.find_element_by_id('email').send_keys('log4hsinyili@gmail.com')
-    driver.find_element_by_id('pass').send_keys('fbtest4hsinyili')
+    driver.find_element_by_id('email').send_keys(email)
+    driver.find_element_by_id('pass').send_keys(pwd)
     driver.find_element_by_xpath(
         '//input[@name="persistent"]/following-sibling::span[1]').click()
     time.sleep(1)
@@ -173,13 +173,6 @@ class HTTPFB():
             'other_user_fbid': thread_id
         }
         return data, uid, rev
-
-    # def str_base(self,
-    #              num,
-    #              b=36,
-    #              numerals="0123456789abcdefghijklmnopqrstuvwxyz"):
-    #     return ((num == 0) and numerals[0]) or (self.str_base(
-    #         num // b, b, numerals).lstrip(numerals[0]) + numerals[num % b])
 
     def send_req(self, data, uid, rev):
         session = self.session
